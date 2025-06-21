@@ -34,7 +34,7 @@ class ProfilSekolahScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Jl. Pendidikan No. 1, Kota Kecamatan',
+                  'Jl. Pangtenga No. 1, Kota.Sampang. Kecamatan omben',
                   style: TextStyle(fontSize: 16),
                 ),
               ],
@@ -109,6 +109,26 @@ class ProfilSekolahScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
+          // Ekstrakurikuler
+          _buildCardWithIcon(
+            icon: Icons.star_border,
+            title: "Ekstrakurikuler",
+            content:
+                "🎨 Seni & Musik\n🤖 Robotika\n⚽ Futsal\n📸 Fotografi\n🗣️ Bahasa Inggris",
+          ),
+
+          const SizedBox(height: 20),
+
+          // Prestasi
+          _buildCardWithIcon(
+            icon: Icons.emoji_events,
+            title: "Prestasi Sekolah",
+            content:
+                "🥇 Juara 1 Lomba Desain Nasional\n🥈 Finalis Olimpiade Sains Provinsi\n🥉 Juara Umum Futsal Antar SMA",
+          ),
+
+          const SizedBox(height: 20),
+
           // Galeri
           ExpansionTile(
             leading: const Icon(Icons.photo_library, color: Colors.indigo),
@@ -126,6 +146,8 @@ class ProfilSekolahScreen extends StatelessWidget {
                     _buildGalleryImage('assets/images/lab.jpg'),
                     _buildGalleryImage('assets/images/perpustakaan.jpg'),
                     _buildGalleryImage('assets/images/kelas.jpg'),
+                    _buildGalleryImage('assets/images/osis.jpg'),
+                    _buildGalleryImage('assets/images/ekstra.jpg'),
                   ],
                 ),
               ),
