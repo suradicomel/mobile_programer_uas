@@ -72,6 +72,18 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
             onTap: _editPasswordDialog,
           ),
           _buildCard(
+            icon: Icons.security,
+            title: 'Privasi & Keamanan',
+            subtitle: 'Pengaturan privasi dan autentikasi',
+            onTap: () => _showInfoPage('Privasi & Keamanan', 'Atur keamanan akun dan privasi penggunaan.'),
+          ),
+          _buildCard(
+            icon: Icons.language,
+            title: 'Bahasa',
+            subtitle: 'Pilih bahasa aplikasi',
+            onTap: () => _showInfoPage('Bahasa', 'Fitur pengaturan bahasa akan segera tersedia.'),
+          ),
+          _buildCard(
             icon: Icons.delete_forever,
             title: 'Hapus Akun',
             subtitle: 'Akun akan dihapus secara permanen',
@@ -97,6 +109,12 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
             subtitle: _tema,
             onTap: () => _showThemeDialog(context),
           ),
+          _buildCard(
+            icon: Icons.dashboard_customize,
+            title: 'Kustomisasi Tampilan',
+            subtitle: 'Pilih layout & font',
+            onTap: () => _showInfoPage('Kustomisasi Tampilan', 'Pengaturan layout dan tema akan segera hadir.'),
+          ),
           const SizedBox(height: 24),
           _buildSectionTitle('ℹ️ Informasi'),
           _buildCard(
@@ -105,7 +123,28 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
             subtitle: 'Versi dan info aplikasi',
             onTap: () => _showInfo(context),
           ),
+          _buildCard(
+            icon: Icons.help_outline,
+            title: 'Bantuan & FAQ',
+            subtitle: 'Pertanyaan umum pengguna',
+            onTap: () => _showInfoPage('Bantuan', 'Hubungi kami di support@ppdbdigital.com'),
+          ),
         ],
+      ),
+    );
+  }
+
+  void _showInfoPage(String title, String content) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(title: Text(title)),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(content),
+          ),
+        ),
       ),
     );
   }

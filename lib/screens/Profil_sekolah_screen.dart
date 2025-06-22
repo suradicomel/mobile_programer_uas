@@ -19,9 +19,10 @@ class ProfilSekolahScreen extends StatelessWidget {
           Center(
             child: Column(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 60,
-                  backgroundImage: AssetImage('assets/images/school_logo.png'),
+                  backgroundImage:
+                      AssetImage('assets/images/school_logo.png'),
                 ),
                 const SizedBox(height: 16),
                 const Text(
@@ -36,6 +37,7 @@ class ProfilSekolahScreen extends StatelessWidget {
                 const Text(
                   'Jl. Pangtenga No. 1, Kota.Sampang. Kecamatan omben',
                   style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -51,7 +53,7 @@ class ProfilSekolahScreen extends StatelessWidget {
                 "SMA Darul Ulum Pangtenga adalah sekolah kejuruan yang berkomitmen mencetak lulusan siap kerja dengan berbagai jurusan unggulan serta fasilitas modern.",
           ),
 
-          // Visi Misi (expandable)
+          // Visi Misi
           ExpansionTile(
             initiallyExpanded: true,
             leading: const Icon(Icons.visibility, color: Colors.indigo),
@@ -64,16 +66,16 @@ class ProfilSekolahScreen extends StatelessWidget {
             ),
             children: [
               ListTile(
-                title: Text(
+                title: const Text(
                   "Visi:",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text(
+                subtitle: const Text(
                   "Menjadi sekolah kejuruan unggulan yang mencetak lulusan berdaya saing tinggi di dunia kerja dan industri.",
                 ),
               ),
               ListTile(
-                title: Text("Misi:"),
+                title: const Text("Misi:"),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
@@ -129,35 +131,36 @@ class ProfilSekolahScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // Galeri
-          ExpansionTile(
-            leading: const Icon(Icons.photo_library, color: Colors.indigo),
-            title: const Text(
-              "Galeri Sekolah",
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.indigo),
-            ),
-            children: [
-              SizedBox(
-                height: 120,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildGalleryImage('assets/images/gedung.jpg'),
-                    _buildGalleryImage('assets/images/lab.jpg'),
-                    _buildGalleryImage('assets/images/perpustakaan.jpg'),
-                    _buildGalleryImage('assets/images/kelas.jpg'),
-                    _buildGalleryImage('assets/images/osis.jpg'),
-                    _buildGalleryImage('assets/images/ekstra.jpg'),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
+
+// Galeri Sekolah
+ExpansionTile(
+  leading: const Icon(Icons.photo_library),
+  title: const Text('Galeri Sekolah'),
+  initiallyExpanded: true,
+  children: [
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Wrap(
+        spacing: 10.0,
+        runSpacing: 10.0,
+        children: [
+          _buildGalleryImageNetwork('https://images.unsplash.com/photo-1577896851231-70ef18881754'), // Ruang kelas
+          _buildGalleryImageNetwork('https://images.unsplash.com/photo-1588072432836-e10032774350'), // Lab komputer
+          _buildGalleryImageNetwork('https://images.unsplash.com/photo-1596495577886-d920f1fb7238'), // Perpustakaan
+          _buildGalleryImageNetwork('https://images.unsplash.com/photo-1571260899304-425eee4c7efc'), // Kegiatan siswa
+          _buildGalleryImageNetwork('https://images.unsplash.com/photo-1584697964404-6c288fc76115'), // Sekolah depan
+          _buildGalleryImageNetwork('https://images.unsplash.com/photo-1600267165683-2f5c980f1a98'), // Lapangan
+        ],
+      ),
+    ),
+  ],
+),
+
+
 
           const SizedBox(height: 20),
 
-          // Kontak Penting
+          // Kontak Sekolah
           _buildCardWithIcon(
             icon: Icons.contact_phone,
             title: "Kontak Sekolah",
@@ -207,17 +210,23 @@ class ProfilSekolahScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGalleryImage(String assetPath) {
-    return Container(
-      margin: const EdgeInsets.only(right: 10),
-      width: 120,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: AssetImage(assetPath),
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
+ Widget _buildGalleryImageNetwork(String url) {
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(8),
+    child: Image.network(
+      url,
+      width: 100,
+      height: 100,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          width: 100,
+          height: 100,
+          color: Colors.grey[300],
+          child: const Icon(Icons.broken_image, color: Colors.red),
+        );
+      },
+    ),
+  );
+}
 }
