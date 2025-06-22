@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
           width: double.maxFinite,
           child: ListView(
             shrinkWrap: true,
-            children: siswaSudahVerifikasi
+            children: DataSiswaSudahVerifikasi
                 .map((siswa) => _buildSiswaItem(siswa['nama'], siswa['dokumen']))
                 .toList(),
           ),
