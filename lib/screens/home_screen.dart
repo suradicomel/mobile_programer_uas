@@ -1,4 +1,3 @@
-// import statements tetap sama
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,7 +5,6 @@ import 'registration_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -15,6 +13,18 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isPendaftaranDibuka = true;
   bool isDataSiswaLengkap = false;
   bool isDokumenTerverifikasi = true;
+
+   final List<Map<String, dynamic>> siswaBelumLengkap = [
+    {
+      'nama': 'Rico',
+      'dokumen': ['Kartu Keluarga', 'Pas Foto 3x4', ],
+    },
+    {
+      'nama': 'Faruk',
+      'dokumen': ['Akta Kelahiran', 'Data Orang Tua', 'Rapot',],
+    },
+  ];
+
 
   Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
@@ -31,16 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (_) => AlertDialog(
         title: const Text("Jadwal Lengkap PPDB"),
         content: const Text(
-          "📅 Pendaftaran: 1 Juni – 30 Juni\n"
-          "📝 Tes Seleksi: 3 Juli\n"
-          "📣 Pengumuman: 5 Juli\n"
-          "🔁 Daftar Ulang: 6 – 10 Juli",
+          "📅 Pendaftaran: 1 Juni – 30 Juni\n📝 Tes Seleksi: 3 Juli\n📣 Pengumuman: 5 Juli\n🔁 Daftar Ulang: 6 – 10 Juli",
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Tutup"),
-          )
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Tutup"))
         ],
       ),
     );
@@ -132,6 +136,91 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showDataBelumLengkapDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Siswa dengan Data Belum Lengkap"),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: siswaBelumLengkap.map((siswa) {
+              return _buildSiswaItem(siswa['nama'], siswa['dokumen']);
+            }).toList(),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Tutup"))
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildSiswaItem(String nama, List<String> dokumen) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(nama, style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            ...dokumen.map((doc) => Text("• $doc", style: const TextStyle(fontSize: 14))),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.edit, color: Colors.orange)),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.delete, color: Colors.red)),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+  
+
+void _showDetailStatus(String title, bool isLengkap) {
+  if (!isLengkap && title == "Data Siswa") {
+    _showDataBelumLengkapDialog();
+  } else {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("Detail: $title"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isLengkap ? Icons.check_circle : Icons.warning_rounded,
+              size: 48,
+              color: isLengkap ? Colors.green : Colors.red,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              isLengkap
+                  ? "Semua data dan dokumen telah lengkap dan terverifikasi."
+                  : "Beberapa data masih belum lengkap.\nSilakan lengkapi terlebih dahulu.",
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Tutup"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,77 +239,63 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text('Selamat Datang di PPDB Darul Ulum', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.indigo)),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Informasi lengkap seputar pendaftaran siswa baru tahun ajaran ini.',
-              style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+            const Text('Informasi lengkap seputar pendaftaran siswa baru tahun ajaran ini.',
+                style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
             const SizedBox(height: 30),
             _buildSectionTitle('Fitur Utama PPDB'),
             Row(
               children: [
-                Expanded(
-                  child: _buildFeatureCard(
-                    icon: Icons.assignment,
-                    title: 'Form PPDB Lengkap',
-                    description: 'Form pendaftaran lengkap dan fleksibel sesuai kebutuhan sekolah.',
-                    onTap: _showFormPPDBDialog,
-                  ),
-                ),
+                Expanded(child: _buildFeatureCard(icon: Icons.assignment, title: 'Form PPDB Lengkap', description: 'Form pendaftaran lengkap dan fleksibel sesuai kebutuhan sekolah.', onTap: _showFormPPDBDialog)),
                 const SizedBox(width: 10),
-                Expanded(
-                  child: _buildFeatureCard(
-                    icon: Icons.lock_open,
-                    title: 'Buka & Tutup PPDB',
-                    description: 'Kontrol mudah membuka dan menutup jalur pendaftaran.',
-                    onTap: _showBukaTutupPPDBDialog,
-                  ),
-                ),
+                Expanded(child: _buildFeatureCard(icon: Icons.lock_open, title: 'Buka & Tutup PPDB', description: 'Kontrol mudah membuka dan menutup jalur pendaftaran.', onTap: _showBukaTutupPPDBDialog)),
               ],
             ),
             const SizedBox(height: 30),
             _buildSectionTitle('Status Pendaftaran & Data Siswa'),
-            _buildStatusItem(icon: Icons.date_range, label: isPendaftaranDibuka ? 'DIBUKA' : 'DITUTUP', status: isPendaftaranDibuka),
-            _buildStatusItem(icon: Icons.person, label: isDataSiswaLengkap ? 'Data Lengkap' : 'Data Belum Lengkap', status: isDataSiswaLengkap),
-            _buildStatusItem(icon: Icons.upload_file, label: isDokumenTerverifikasi ? 'Dokumen Terverifikasi' : 'Belum Verifikasi', status: isDokumenTerverifikasi),
+            GestureDetector(
+              onTap: () => _showDetailStatus('Pendaftaran', isPendaftaranDibuka),
+              child: _buildStatusItem(icon: Icons.date_range, label: isPendaftaranDibuka ? 'DIBUKA' : 'DITUTUP', status: isPendaftaranDibuka),
+            ),
+            GestureDetector(
+              onTap: () => _showDetailStatus('Data Siswa', isDataSiswaLengkap),
+              child: _buildStatusItem(icon: Icons.person, label: isDataSiswaLengkap ? 'Data Lengkap' : 'Data Belum Lengkap', status: isDataSiswaLengkap),
+            ),
+            GestureDetector(
+              onTap: () => _showDetailStatus('Dokumen', isDokumenTerverifikasi),
+              child: _buildStatusItem(icon: Icons.upload_file, label: isDokumenTerverifikasi ? 'Dokumen Terverifikasi' : 'Belum Verifikasi', status: isDokumenTerverifikasi),
+            ),
             const SizedBox(height: 30),
             _buildSectionTitle('Info Singkat'),
-            GestureDetector(
-              onTap: _showJadwalDialog,
-              child: _buildInfoTile(Icons.calendar_today, 'Jadwal PPDB', 'Pendaftaran dibuka 1 Juni - 30 Juni.'),
-            ),
-            GestureDetector(
-              onTap: _openMaps,
-              child: _buildInfoTile(Icons.location_on, 'Lokasi Sekolah', 'Jl. Omben No. 1, Omben City'),
-            ),
-            _buildInfoTile(Icons.school, 'program Pelajaran', 'Komputer, IPS, At-tanzil, IPA, Arab, dan lainnya.'),
+            GestureDetector(onTap: _showJadwalDialog, child: _buildInfoTile(Icons.calendar_today, 'Jadwal PPDB', 'Pendaftaran dibuka 1 Juni - 30 Juni.')),
+            GestureDetector(onTap: _openMaps, child: _buildInfoTile(Icons.location_on, 'Lokasi Sekolah', 'Jl. Omben No. 1, Omben City')),
+            _buildInfoTile(Icons.school, 'Program Pelajaran', 'Komputer, IPS, At-tanzil, IPA, Arab, dan lainnya.'),
             const SizedBox(height: 30),
             _buildSectionTitle('Persyaratan & Keunggulan'),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(child: _buildListCard([
-                  '• Fotokopi Akta Kelahiran',
-                  '• Fotokopi KK',
-                  '• Pas Foto 3x4', 
-                  '• Formulir Online'])),
+                '• Fotokopi Akta Kelahiran', 
+                '• Fotokopi KK', 
+                '• Pas Foto 3x4', 
+                '• Formulir Online'])),
                 const SizedBox(width: 16),
                 Expanded(child: _buildListCard([
                 '✅ Guru Profesional', 
-                '✅ Fasilitas Lengkap', 
+                '✅ Fasilitas Lengkap',
                 '✅ Lokasi Strategis', 
-                '✅ Ekstrakurikuler'])),
+                '✅ Ekstrakurikuler']))
               ],
             ),
             const SizedBox(height: 30),
-
-            /// 🔥 Modern "Daftar Sekarang" Area
             Center(
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [Colors.indigo, Colors.indigoAccent]),
+                  gradient: const LinearGradient(colors: [Colors.indigo, Colors.indigoAccent]),
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4))],
+                  boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8)],
                 ),
                 child: Column(
                   children: [
