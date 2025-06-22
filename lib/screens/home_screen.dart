@@ -25,6 +25,18 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  final List<Map<String, dynamic>> DataSiswaSudahVerifikasi = [
+    {
+      'nama': 'Farhan',
+      'dokumen': ['Kartu Keluarga', 'Pas Foto', 'Akta Kelahiran', 'Ijazah', 'Rapot'],
+    },
+    {
+      'nama': 'Suradi',
+      'dokumen': ['Akta Kelahiran', 'KK', 'Rapot', 'Ijazah', 'pas foto'],
+    },
+  ];
+
+  
 
   Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
@@ -136,6 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
+
   void _showDataBelumLengkapDialog() {
     showDialog(
       context: context,
@@ -148,6 +162,27 @@ class _HomeScreenState extends State<HomeScreen> {
             children: siswaBelumLengkap.map((siswa) {
               return _buildSiswaItem(siswa['nama'], siswa['dokumen']);
             }).toList(),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Tutup"))
+        ],
+      ),
+    );
+  }
+
+  void _showDokumenTerverifikasiDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Data Siswa Terverifikasi"),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView(
+            shrinkWrap: true,
+            children: siswaSudahVerifikasi
+                .map((siswa) => _buildSiswaItem(siswa['nama'], siswa['dokumen']))
+                .toList(),
           ),
         ),
         actions: [
@@ -185,40 +220,36 @@ class _HomeScreenState extends State<HomeScreen> {
   
 
 void _showDetailStatus(String title, bool isLengkap) {
-  if (!isLengkap && title == "Data Siswa") {
-    _showDataBelumLengkapDialog();
-  } else {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text("Detail: $title"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isLengkap ? Icons.check_circle : Icons.warning_rounded,
-              size: 48,
-              color: isLengkap ? Colors.green : Colors.red,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              isLengkap
-                  ? "Semua data dan dokumen telah lengkap dan terverifikasi."
-                  : "Beberapa data masih belum lengkap.\nSilakan lengkapi terlebih dahulu.",
-              textAlign: TextAlign.center,
-            ),
+    if (!isLengkap && title == "Data Siswa") {
+      _showDataBelumLengkapDialog();
+    } else if (isLengkap && title == "Dokumen") {
+      _showDokumenTerverifikasiDialog();
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("Detail: $title"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(isLengkap ? Icons.check_circle : Icons.warning_rounded,
+                  size: 48, color: isLengkap ? Colors.green : Colors.red),
+              const SizedBox(height: 10),
+              Text(
+                isLengkap
+                    ? "Semua data dan dokumen telah lengkap dan terverifikasi."
+                    : "Beberapa data masih belum lengkap.\nSilakan lengkapi terlebih dahulu.",
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Tutup"))
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Tutup"),
-          ),
-        ],
-      ),
-    );
+      );
+    }
   }
-}
 
 
   @override
