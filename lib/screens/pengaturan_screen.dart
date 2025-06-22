@@ -135,19 +135,102 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
   }
 
   void _showInfoPage(String title, String content) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Scaffold(
-          appBar: AppBar(title: Text(title)),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(content),
+  Widget pageContent;
+
+  switch (title) {
+    case 'Bahasa':
+      pageContent = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Pilih bahasa aplikasi:'),
+          const SizedBox(height: 12),
+          ListTile(
+            title: const Text('🇮🇩 Bahasa Indonesia'),
+            onTap: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Bahasa diubah ke Indonesia')),
+              );
+            },
           ),
+          ListTile(
+            title: const Text('🇬🇧 English'),
+            onTap: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Language changed to English')),
+              );
+            },
+          ),
+        ],
+      );
+      break;
+
+    case 'Privasi & Keamanan':
+      pageContent = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Atur keamanan dan privasi Anda:', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 16),
+          SwitchListTile(
+            value: true,
+            title: const Text('Autentikasi Dua Faktor'),
+            onChanged: (val) {
+              // Tambahkan logika di sini
+            },
+          ),
+          SwitchListTile(
+            value: false,
+            title: const Text('Sembunyikan Informasi Pribadi'),
+            onChanged: (val) {
+              // Tambahkan logika di sini
+            },
+          ),
+        ],
+      );
+      break;
+
+    case 'Kustomisasi Tampilan':
+      pageContent = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Kustomisasi Layout & Font:', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          ListTile(
+            title: const Text('Ukuran Font'),
+            subtitle: const Text('Sedang'),
+            onTap: () {
+              // Tambahkan aksi pilihan font di sini
+            },
+          ),
+          ListTile(
+            title: const Text('Layout Tampilan'),
+            subtitle: const Text('Default'),
+            onTap: () {
+              // Tambahkan aksi pilihan layout di sini
+            },
+          ),
+        ],
+      );
+      break;
+
+    default:
+      pageContent = Text(content);
+  }
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Scaffold(
+        appBar: AppBar(title: Text(title)),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: pageContent,
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSectionTitle(String title) {
     return Padding(
