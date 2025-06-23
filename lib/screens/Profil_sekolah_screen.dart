@@ -166,7 +166,7 @@ class ProfilSekolahScreen extends StatelessWidget {
             context,
             Icons.map,
             'Peta Lokasi Sekolah',
-            'Klik untuk membuka Google Maps',
+            'SMA Darul Ulum Pangtenga',
             onTap: () => _launchURL(
               'https://www.google.com/maps/search/?api=1&query=-7.123456,113.456789',
             ),
